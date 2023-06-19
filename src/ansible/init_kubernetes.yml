@@ -6,8 +6,14 @@
     - name: Get first loadbalancer host
       set_fact:
         lb_host: "{{ groups['loadbalancer'][0] }}"
+    
     - name: Initialize Kubernetes cluster
       command: kubeadm init --pod-network-cidr=10.10.0.0/16 --control-plane-endpoint={{ lb_host }}:6443 --upload-certs
+      register: init_output
+
+    - set_fact:
+        join_master_token: "{{ init_output.stdout_lines[-2] }}"
+        join_worker_token: "{{ init_output.stdout_lines[-1] }}"
 
   post_tasks:
     - name: Copy Kubernetes configuration to local user
@@ -17,6 +23,7 @@
         src: "/etc/kubernetes/admin.conf"
         dest: "$HOME/.kube/config"
         mode: "0644"
+    
     - name: Create kube directory in home
       become: true
       become_user: "{{ ansible_user }}"
@@ -24,6 +31,7 @@
         path: "$HOME/.kube"
         state: directory
         mode: "0755"
+    
     - name: Change owner of kube directory
       become: true
       become_user: "{{ ansible_user }}"
@@ -32,18 +40,21 @@
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
         mode: "0755"
+    
     - name: Copy Kubernetes configuration to root user
       become: true
       copy:
         src: "/etc/kubernetes/admin.conf"
         dest: "/root/.kube/config"
         mode: "0644"
+    
     - name: Create kube directory in root
       become: true
       file:
         path: "/root/.kube"
         state: directory
         mode: "0755"
+    
     - name: Change owner of kube directory in root
       become: true
       file:
@@ -51,10 +62,82 @@
         owner: "root"
         group: "root"
         mode: "0755"
+    
     - name: Apply flannel CNI network plugin
       become: true
       become_user: "{{ ansible_user }}"
       shell: "kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"
+
+    - name: Join master nodes to the cluster
+      command: "{{ join_master_token }}"
+      when: inventory_hostname != groups['master'][0]
+    
+    - name: Join worker nodes to the cluster
+      command: "{{ join_worker_token }}"
+      when: inventory_hostname in groups['worker']
+
+
+
+
+
+
+# - name: Initialize Kubernetes cluster
+#   hosts: master[0]
+#   become: true
+
+#   tasks:
+#     - name: Get first loadbalancer host
+#       set_fact:
+#         lb_host: "{{ groups['loadbalancer'][0] }}"
+#     - name: Initialize Kubernetes cluster
+#       command: kubeadm init --pod-network-cidr=10.10.0.0/16 --control-plane-endpoint={{ lb_host }}:6443 --upload-certs
+
+#   post_tasks:
+#     - name: Copy Kubernetes configuration to local user
+#       become: true
+#       become_user: "{{ ansible_user }}"
+#       copy:
+#         src: "/etc/kubernetes/admin.conf"
+#         dest: "$HOME/.kube/config"
+#         mode: "0644"
+#     - name: Create kube directory in home
+#       become: true
+#       become_user: "{{ ansible_user }}"
+#       file:
+#         path: "$HOME/.kube"
+#         state: directory
+#         mode: "0755"
+#     - name: Change owner of kube directory
+#       become: true
+#       become_user: "{{ ansible_user }}"
+#       file:
+#         path: "$HOME/.kube"
+#         owner: "{{ ansible_user }}"
+#         group: "{{ ansible_user }}"
+#         mode: "0755"
+#     - name: Copy Kubernetes configuration to root user
+#       become: true
+#       copy:
+#         src: "/etc/kubernetes/admin.conf"
+#         dest: "/root/.kube/config"
+#         mode: "0644"
+#     - name: Create kube directory in root
+#       become: true
+#       file:
+#         path: "/root/.kube"
+#         state: directory
+#         mode: "0755"
+#     - name: Change owner of kube directory in root
+#       become: true
+#       file:
+#         path: "/root/.kube"
+#         owner: "root"
+#         group: "root"
+#         mode: "0755"
+#     - name: Apply flannel CNI network plugin
+#       become: true
+#       become_user: "{{ ansible_user }}"
+#       shell: "kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"
 
 
 #---
