@@ -1,0 +1,45 @@
+#!/usr/bin/expect -f
+
+#Arguments
+set timeout 9000
+set uname [lindex $argv 0]
+set w_ip [lindex $argv 1]
+set pword [lindex $argv 2]
+set path [lindex $argv 3]
+#set advr_ip [lindex $argv 4]
+#set token [lindex $argv 4]
+#Copy Files
+        spawn scp -o StrictHostKeyChecking=no $path/src/install_k8s.sh $uname@$w_ip:/home/$uname/
+        expect {
+        password: {send "$pword\r"; exp_continue}
+                  }
+
+        spawn scp -o StrictHostKeyChecking=no $path/src/master_token.sh $uname@$w_ip:/home/$uname/
+        expect {
+        password: {send "$pword\r"; exp_continue}
+                  }
+#SSH to the server
+
+spawn ssh -o StrictHostKeyChecking=no $uname@$w_ip
+expect "password: "
+send "$pword\r"
+expect "$ "
+ send "sudo su \r"
+     expect ": "
+     send "$pword\r"
+ expect "# "
+ send "chmod 777 install_k8s.sh\r"
+ expect "# "
+ send "./install_k8s.sh\r"
+ send "chmod 777 master_token.sh\r"
+set timeout 6000 
+ expect "# "
+ send "./master_token.sh\r"
+ expect "# "
+ send "rm -rf install_k8s.sh\r"
+ expect "# "
+ send "rm -rf master_token.sh\r" 
+ expect "# "
+ send "exit\r"
+expect "$ "
+send "exit\r"
