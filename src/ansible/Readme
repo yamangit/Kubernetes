@@ -1,7 +1,22 @@
-For install_kubernetes.yml
+1. For install_kubernetes.yml
 To run the command, specify the hosts.ini file and execute this command:
 ansible-playbook -i hosts.ini --limit 'master:worker' install_kubernetes.yml
 This will install all kubernetes components on all masters and workers, it will exclude loadbalancer group.
 
-For init.yml
+2. For init_kubernetes.yml
+
+Run this command
+
+ansible-playbook -i hosts.ini --limit 'master[0]' init_kubernetes.yml
+
 It will take first entry from the master host group in hosts.ini and take it as primary master and initilize the cluster with the primary LB as first entry of group loadbalancer from hosts.ini
+
+
+3. For install_haproxy.yml
+
+ansible-playbook -i hosts.ini --limit 'loadbalancer' install_haproxy.yml
+
+Run this command to install haproxy on all the hosts under loadbalancer group on hosts.ini
+
+4. Sethostname
+ansible-playbook set_hostname.yml -i inventory.ini
