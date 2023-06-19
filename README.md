@@ -7,9 +7,8 @@ Spins up latest kubernetes.
 
 How to use the file.
 01. login to your primary master server
-02. wget https://github.com/PrabhatNew/Kubernetes.git.tar.gz
-03. sudo tar xzvf <your-filename-here>
-04. chmod 777 start.sh
+02. git clone https://github.com/PrabhatNew/Kubernetes.git
+03. sudo chmod -R 777 Kubernetes
 05. sh start.sh
 
 Enjoy!
