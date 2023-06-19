@@ -1,0 +1,7 @@
+For install_kubernetes.yml
+To run the command, specify the hosts.ini file and execute this command:
+ansible-playbook -i hosts.ini --limit 'master:worker' install_kubernetes.yml
+This will install all kubernetes components on all masters and workers, it will exclude loadbalancer group.
+
+For init.yml
+It will take first entry from the master host group in hosts.ini and take it as primary master and initilize the cluster with the primary LB as first entry of group loadbalancer from hosts.ini

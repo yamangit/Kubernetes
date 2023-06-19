@@ -1,0 +1,34 @@
+---
+- name: Set hostname for all machines
+  hosts: all
+  become: true
+  vars:
+    hostname_prefix: "k8s"
+    domain_name: "vianet"
+  tasks:
+    - name: Set hostname for master group
+      when: "'master' in group_names"
+      lineinfile:
+        path: /etc/hostname
+        line: "{{ hostname_prefix }}.{{ item }}.{{ domain_name }}"
+        create: yes
+      with_sequence: start=1 count={{ groups['master']|length }}
+      when: inventory_hostname in groups['master']
+
+    - name: Set hostname for worker group
+      when: "'worker' in group_names"
+      lineinfile:
+        path: /etc/hostname
+        line: "{{ hostname_prefix }}.{{ item }}.{{ domain_name }}"
+        create: yes
+      with_sequence: start=1 count={{ groups['worker']|length }}
+      when: inventory_hostname in groups['worker']
+
+    - name: Set hostname for loadbalancer group
+      when: "'loadbalancer' in group_names"
+      lineinfile:
+        path: /etc/hostname
+        line: "{{ hostname_prefix }}.{{ item }}.{{ domain_name }}"
+        create: yes
+      with_sequence: start=1 count={{ groups['loadbalancer']|length }}
+      when: inventory_hostname in groups['loadbalancer']
