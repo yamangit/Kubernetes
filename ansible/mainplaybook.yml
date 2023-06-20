@@ -5,13 +5,25 @@
     - configure_keepalived
     - configure_haproxy
 
-- name: Install and configure Kubernetes
+- name: Install Kubernetes
   hosts: master:worker
   roles:
     - install_kubernetes
+
+- name: Initialize Kubernetes on first master
+  hosts: master[0]
+  roles:
     - init_kubernetes
-    - join_master
+
+- name: Join the worker nodes
+  hosts: worker
+  roles:
     - join_worker
+
+- name: Join the master nodes
+  hosts: "{{ groups['master'] | skip(0) }}"
+  roles:
+    - join_master
 
 - name: Install Rancher
   hosts: master
