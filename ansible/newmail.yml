@@ -1,0 +1,19 @@
+- name: Install and configure Keepalived and HAProxy
+  hosts: loadbalancer
+  roles:
+    - haproxy_keepalived
+    - configure_keepalived
+    - configure_haproxy
+
+- name: Install and configure Kubernetes
+  hosts: master:worker
+  roles:
+    - install_kubernetes
+    - init_kubernetes
+    - join_master
+    - join_worker
+
+- name: Install Rancher
+  hosts: master
+  roles:
+    - rancher_setup
