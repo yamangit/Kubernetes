@@ -1,0 +1,72 @@
+- hosts: rancher_server
+  tasks:
+    - name: Update APT cache
+      apt:
+        update_cache: yes
+    
+    - name: Install prerequisites
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - gnupg2
+    
+    - name: Execute command to import Docker GPG key
+      ansible.builtin.apt_key:
+        keyring: /etc/apt/trusted.gpg.d/docker.gpg
+        state: present
+        url: https://download.docker.com/linux/ubuntu/gpg
+    
+    - name: Add Docker repository
+      apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+        state: present
+        filename: docker
+    
+    - name: Update APT cache again
+      apt:
+        update_cache: yes
+    
+    - name: Install Docker
+      apt:
+        name: docker-ce
+        state: present
+    
+    - name: Install Docker Compose
+      get_url:
+        url: "https://github.com/docker/compose/releases/download/v2.3.3/docker-compose-linux-x86_64"
+        dest: "/usr/local/bin/docker-compose"
+    
+    # Grant execute permission to Docker Compose
+    - name: Chmod +x Docker Compose
+      file:
+        path: /usr/local/bin/docker-compose
+        mode: 'a+x'
+    
+    # Pull the latest Rancher image from Docker Hub
+    - name: Pull Rancher image
+      docker_image:
+        name: rancher/rancher:latest
+        source: pull
+    
+    # Create a Docker volume for storing Rancher data
+    - name: Create rancher-data volume
+      docker_volume:
+        name: rancher-data
+        driver: local
+    
+    # Deploy Rancher service using the Rancher image and the rancher-data volume
+    - name: Deploy Rancher service
+      docker_service:
+        name: rancher
+        image: rancher/rancher:latest
+        state: present
+        args:
+          - container_name: rancher
+        ports:
+          - 80:80
+          - 443:443
+        volumes:
+          - rancher-data:/var/lib/rancher
