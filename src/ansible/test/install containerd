@@ -1,0 +1,44 @@
+tasks:
+  - name: Install containerd dependencies
+    apt:
+      update_cache: yes
+      name:
+        - curl
+        - gnupg2
+        - software-properties-common
+        - apt-transport-https
+        - ca-certificates
+
+  - name: Import Docker GPG key
+    shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/docker.gpg
+
+  - name: Add Docker repository
+    apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+        state: present
+        filename: docker
+
+  - name: Install containerd
+    apt:
+      update_cache: yes
+      name: containerd.io
+      state: present
+
+  - name: Configure containerd
+    shell: "containerd config default | sudo tee /etc/containerd/config.toml >/dev/null 2>&1"
+
+  - name: Change containerd config to use systemd cgroup
+    lineinfile:
+      path: /etc/containerd/config.toml
+      regexp: '^SystemdCgroup ='
+      line: 'SystemdCgroup = true'
+
+  - name: Restart containerd
+    service:
+      name: containerd
+      state: restarted
+
+  - name: Enable containerd
+    service:
+      name: containerd
+      enabled: yes

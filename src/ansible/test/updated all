@@ -1,0 +1,124 @@
+---
+- name: Install Kubernetes
+  hosts: master:worker
+  become: true
+  
+  tasks:
+    - name: Disable swap
+      command: swapoff -a
+
+    - name: Remove swap entry from /etc/fstab
+      lineinfile:
+        path: /etc/fstab
+        state: absent
+        regexp: '^/swap.*'
+
+    - name: Disable Firewall
+      service:
+        name: ufw
+        state: stopped
+        enabled: no
+
+    - name: Enable and load kernel modules
+      copy:
+        content: |
+          overlay
+          br_netfilter
+        dest: /etc/modules-load.d/containerd.conf
+
+    - name: Load kernel modules
+      command: modprobe {{ item }}
+      with_items:
+        - overlay
+        - br_netfilter
+
+    - name: Add kernel settings
+      copy:
+        content: |
+          net.bridge.bridge-nf-call-ip6tables = 1
+          net.bridge.bridge-nf-call-iptables  = 1
+          net.ipv4.ip_forward                 = 1
+        dest: /etc/sysctl.d/kubernetes.conf
+
+    - name: Reload kernel settings
+      command: sysctl --system
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install containerd dependencies
+      apt:
+        update_cache: yes
+        name:
+          - curl
+          - gnupg2
+          - software-properties-common
+          - apt-transport-https
+          - ca-certificates
+
+    - name: Execute command to import Docker GPG key  
+      ansible.builtin.apt_key:  
+          keyring: /etc/apt/trusted.gpg.d/docker.gpg
+          state: present 
+          url: https://download.docker.com/linux/ubuntu/gpg
+
+    - name: Add Docker repository
+      apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+        state: present
+        filename: docker
+    - name: Install containerd
+      apt:
+        update_cache: yes
+        name: containerd.io
+        state: present
+
+    - name: Configure containerd
+      shell: "containerd config default | sudo tee /etc/containerd/config.toml >/dev/null 2>&1"
+
+    - name: Change containerd config to use systemd cgroup
+      lineinfile:
+        path: /etc/containerd/config.toml
+        regexp: '^SystemdCgroup ='
+        line: 'SystemdCgroup = true'
+
+    - name: Restart containerd
+      service:
+        name: containerd
+        state: restarted
+
+    - name: Enable containerd
+      service:
+        name: containerd
+        enabled: yes
+
+    - name: Configure cgroup v2
+      lineinfile:
+        path: /etc/default/grub
+        state: present
+        regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
+        line: 'GRUB_CMDLINE_LINUX_DEFAULT="cgroup_no_v1=net_prio,net_cls cgroup_enable=0"'
+      notify: Update GRUB
+  
+    - name: Add Kubernetes GPG key
+      ansible.builtin.apt_key:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg  
+        state: present
+
+    - name: Add Kubernetes apt repository
+      ansible.builtin.apt_repository: 
+        repo: deb http://apt.kubernetes.io/ kubernetes-xenial main 
+        state: present
+    - name: Install Kubernetes packages
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - kubelet
+        - kubeadm
+        - kubectl
+
+  handlers:
+    - name: Update GRUB
+      command: update-grub
