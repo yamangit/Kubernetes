@@ -1,8 +1,9 @@
 - name: Install and configure Keepalived and HAProxy
   hosts: loadbalancer
   roles:
-    - haproxy_keepalived
-    - configure_keepalived
+    #- haproxy_keepalived
+    #- configure_keepalived
+    - install_haproxy
     - configure_haproxy
 
 - name: Install Kubernetes

@@ -1,9 +1,12 @@
-1. For install_kubernetes.yml
+1. To run the ansible script run following on the ansible master
+ansible-playbook -i hosts.ini mainplaybook.yml
+
+2. For install_kubernetes.yml
 To run the command, specify the hosts.ini file and execute this command:
 ansible-playbook -i hosts.ini --limit 'master:worker' install_kubernetes.yml
 This will install all kubernetes components on all masters and workers, it will exclude loadbalancer group.
 
-2. For init_kubernetes.yml
+3. For init_kubernetes.yml
 
 Run this command
 
