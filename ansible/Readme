@@ -1,6 +1,8 @@
 1. To run the ansible script run following on the ansible master
 ansible-playbook -i hosts.ini mainplaybook.yml
 
+Change the ip and ports of haproxy.cfg file before running the ansible script.
+
 2. For install_kubernetes.yml
 To run the command, specify the hosts.ini file and execute this command:
 ansible-playbook -i hosts.ini --limit 'master:worker' install_kubernetes.yml

@@ -27,6 +27,6 @@
     - join_master
 
 - name: Install Rancher
-  hosts: master
+  hosts: rancher
   roles:
     - rancher_setup

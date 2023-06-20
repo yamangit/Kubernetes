@@ -1,0 +1,15 @@
+- name: Copy HAProxy configuration
+  hosts: loadbalancer
+  become: true
+  tasks:
+    - name: Copy HAProxy configuration file
+      copy:
+        src: haproxy.cfg
+        dest: /etc/haproxy/haproxy.cfg
+      notify: restart haproxy
+
+  handlers:
+    - name: restart haproxy
+      service:
+        name: haproxy
+        state: restarted
