@@ -1,30 +1,30 @@
-1. To run the ansible script run following on the ansible master
+
+Run all playbook at once
 ansible-playbook -i hosts.ini mainplaybook.yml
 
-Change the ip and ports of haproxy.cfg file before running the ansible script.
+haproxy.cfg
+This configures HAProxy as a load balancer.
+Make sure to update the ip and port settings in haproxy.cfg before running.
+mainplaybook.yml
 
-2. For install_kubernetes.yml
-To run the command, specify the hosts.ini file and execute this command:
+This installs all Kubernetes components on the master and worker nodes.
+
+To run:
 ansible-playbook -i hosts.ini --limit 'master:worker' install_kubernetes.yml
-This will install all kubernetes components on all masters and workers, it will exclude loadbalancer group.
+This will exclude the load balancer group.
 
-3. For init_kubernetes.yml
-
-Run this command
-
+init_kubernetes.yml
+This initializes the Kubernetes cluster.
+To run:
 ansible-playbook -i hosts.ini --limit 'master[0]' init_kubernetes.yml
+This will use the first master node in hosts.ini as the primary master and initialize the cluster.
 
-It will take first entry from the master host group in hosts.ini and take it as primary master and initilize the cluster with the primary LB as first entry of group loadbalancer from hosts.ini
-
-run updated init with
-ansible-playbook init_kubernetes.yml
-
-
-3. For install_haproxy.yml
-
+install_haproxy.yml
+This installs HAProxy on the load balancer nodes.
+To run:
 ansible-playbook -i hosts.ini --limit 'loadbalancer' install_haproxy.yml
 
-Run this command to install haproxy on all the hosts under loadbalancer group on hosts.ini
-
-4. Sethostname
+set_hostname.yml
+This sets the hostname of nodes.
+To run:
 ansible-playbook set_hostname.yml -i inventory.ini

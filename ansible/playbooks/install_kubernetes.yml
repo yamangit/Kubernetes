@@ -110,6 +110,7 @@
       ansible.builtin.apt_repository: 
         repo: deb http://apt.kubernetes.io/ kubernetes-xenial main 
         state: present
+
     - name: Install Kubernetes packages
       apt:
         name: "{{ item }}"
@@ -118,6 +119,9 @@
         - kubelet
         - kubeadm
         - kubectl
+
+    - name: Hold Kubernetes packages
+      command: apt-mark hold kubelet kubeadm kubectl
 
   handlers:
     - name: Update GRUB
