@@ -7,7 +7,11 @@
   - name: Update APT cache
     apt:
       update_cache: yes
+
   - name: Install HAProxy
     apt:
       name: haproxy
       state: present
+
+  - name: Intall python utils
+    command: sudo apt-get install -y policycoreutils-python-utils

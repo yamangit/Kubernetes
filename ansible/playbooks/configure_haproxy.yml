@@ -6,6 +6,13 @@
       copy:
         src: haproxy.cfg
         dest: /etc/haproxy/haproxy.cfg
+
+    - name: Unmask HAProxy service
+      command: sudo systemctl unmask haproxy.service
+      ignore_errors: true
+
+    - name: Enable HAProxy service
+      command: sudo systemctl enable haproxy
       notify: restart haproxy
 
   handlers:
