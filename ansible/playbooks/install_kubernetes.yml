@@ -77,11 +77,12 @@
     - name: Configure containerd
       shell: "containerd config default | sudo tee /etc/containerd/config.toml >/dev/null 2>&1"
 
-    - name: Change containerd config to use systemd cgroup
+    - name: Change SystemdCgroup setting
       lineinfile:
-        path: /etc/containerd/config.toml
-        regexp: '^SystemdCgroup ='
-        line: 'SystemdCgroup = true'
+      path: /etc/containerd/config.toml
+      regexp: '^SystemdCgroup'
+      line: 'SystemdCgroup = true'
+      backrefs: true
 
     - name: Restart containerd
       service:
