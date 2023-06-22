@@ -1,0 +1,18 @@
+- name: Generate and Execute Master Join Token
+  hosts: master[0]
+  gather_facts: false
+  become: true
+
+  tasks:
+    - name: Generate Master Join Token
+      command: kubeadm token create --print-join-command
+      register: master_join_token
+
+    - name: Set Master Join Command as Fact
+      set_fact:
+        master_join_command: "{{ master_join_token.stdout_lines[0] }}"
+
+    - name: Execute Master Join Command on Other Master Nodes
+      command: "{{ master_join_command }}"
+      become_user: root
+      when: "'master' in group_names and inventory_hostname != groups['master'][0]"
