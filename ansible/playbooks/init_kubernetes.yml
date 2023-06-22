@@ -1,26 +1,28 @@
 - hosts: master[0]
   tasks:
-    - name: Get facts for loadbalancer host
-      set_fact:
-        loadbalancer_ip: "{{ hostvars[groups['loadbalancer'][0]].ansible_host }}"
+    # - name: Get facts for loadbalancer host
+    #   set_fact:
+    #     loadbalancer_ip: "{{ hostvars[groups['loadbalancer'][0]].ansible_host }}"
         
     - name: Initialize Kubernetes control plane
-      command: "kubeadm init --control-plane-endpoint={{ loadbalancer_ip }}:6443 --upload-certs --pod-network-cidr=10.244.0.0/16 --v=5"
+      command: "sudo kubeadm init --control-plane-endpoint=192.168.101.120:6443 --upload-certs --pod-network-cidr=10.244.0.0/16 --v=5"
       args:
         creates: /etc/kubernetes/admin.conf
       register: kubeadm_init
       
-    - name: Create config dir and copy admin config
-      command: | 
-        mkdir -p $HOME/.kube
-        sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-        
-    - name: Apply admin user permissions      
-      command: sudo chown $(id -u):$(id -g) $HOME/.kube/config
+    - name: Create config dir
+      command: mkdir -p $HOME/.kube
       
+    - name: copy admin config
+      command: sudo cp /etc/kubernetes/admin.conf $HOME/.kube/config
+
+    - name: Apply admin user permissions
+      become: yes
+      become_user: root
+      command: chown $USER:$USER $HOME/.kube/config
+
     - name: Get Kubernetes nodes
       command: kubectl get nodes -o wide
-        
+
     - name: Install Flannel
-      command: |
-        kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+      command: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
