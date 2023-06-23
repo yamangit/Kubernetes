@@ -1,6 +1,6 @@
 Pre-requisites
 1. The Ansible control node (where you'll run the Ansible commands) must be able to SSH to all the nodes without a password. This can be done by generating SSH keys and copying the public key to all the nodes.
-2. The hosts.ini file needs to be updated with the IP addresses of all the nodes under the corresponding groups.
+2. The hosts.ini file needs to be created with the IP addresses of all the nodes under the corresponding groups, execute hosts.ini.sh file to make hosts.ini file.
 3. haproxy.cfg needs to be updated with the correct IP addresses and ports of the nodes before running mainplaybook.yml
 4. The nodes must allow port 22 for SSH, port 6443 for Kubernetes API server and 2379-2380 for etcd. These ports need to be opened on any firewall.
 
@@ -14,6 +14,9 @@ haproxy.cfg
 This configures HAProxy as a load balancer.
 Make sure to update the ip and port settings in haproxy.cfg before running.
 mainplaybook.yml
+
+hosts.ini.sh
+This creates the hosts.ini file with user inputs.
 
 Run seperate playbooks individually:
 
