@@ -1,4 +1,4 @@
-Ansible Playbook for Kubernetes, HAproxy and Rancher
+**Ansible Playbook for Kubernetes, HAproxy and Rancher**
 This Ansible playbook will install and configure Kubernetes, HAproxy and Rancher on a set of hosts.
 Requirements
 1. Ansible 2.9+
