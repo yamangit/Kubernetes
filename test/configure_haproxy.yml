@@ -1,0 +1,22 @@
+- name: Copy HAProxy configuration
+  hosts: loadbalancer
+  become: true
+  tasks:
+    - name: Copy HAProxy configuration file
+      copy:
+        src: haproxy.cfg
+        dest: /etc/haproxy/haproxy.cfg
+
+    - name: Unmask HAProxy service
+      command: sudo systemctl unmask haproxy.service
+      ignore_errors: true
+
+    - name: Enable HAProxy service
+      command: sudo systemctl enable haproxy
+      notify: restart haproxy
+
+  handlers:
+    - name: restart haproxy
+      service:
+        name: haproxy
+        state: restarted
