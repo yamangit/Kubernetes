@@ -1,43 +1,53 @@
+Ansible Playbook for Kubernetes, HAproxy and Rancher
+This Ansible playbook will install and configure Kubernetes, HAproxy and Rancher on a set of hosts.
+Requirements
+1. Ansible 2.9+
+2. The Ansible control node (where you'll run the Ansible commands) must be able to SSH to all the nodes without a password. This can be done by generating SSH keys and copying the public key to all the nodes.
+
+Usage
+To use this playbook, you will need to create a hosts.ini file that lists the hosts that you want to install Kubernetes and Rancher on. The hosts file should be in the same directory as the playbook.
+
+
 Pre-requisites
-1. The Ansible control node (where you'll run the Ansible commands) must be able to SSH to all the nodes without a password. This can be done by generating SSH keys and copying the public key to all the nodes.
-2. The hosts.ini file needs to be created with the IP addresses of all the nodes under the corresponding groups, execute hosts.ini.sh file to make hosts.ini file.
-3. haproxy.cfg needs to be updated with the correct IP addresses and ports of the nodes before running mainplaybook.yml
-4. The nodes must allow port 22 for SSH, port 6443 for Kubernetes API server and 2379-2380 for etcd. These ports need to be opened on any firewall.
+1. Execute the hosts.ini.sh bash script to create hosts.ini file and follow instructions carefully. The hosts.ini file will be created with the user inputted hostname, IP addresses, username, location to private key of all the nodes under the corresponding groups. 
+2. haproxy.cfg needs to be updated with the correct IP addresses and ports of the nodes before running mainplaybook.yml
+3. The nodes must allow port 22 for SSH, port 6443 for Kubernetes API server and 2379-2380 for etcd. These ports need to be opened on any firewall.
 
-Once you have these things in place, you can run the various Ansible playbooks to configure your setup!
+The playbook uses the following playbooks:
+* `install_haproxy` - Installs HAProxy on the loadbalancer hosts.
+* `configure_haproxy` - Configures HAProxy to load balance traffic to the Kubernetes masters.
+* `install_kubernetes` - Installs Kubernetes on the master and worker hosts.
+* `init_kubernetes` - Initializes Kubernetes on the first master host.
+* `join_worker` - Joins the worker nodes to the Kubernetes cluster.
+* `join_master` - Joins the master nodes to the Kubernetes cluster.
+* `rancher_setup` - Installs Rancher on the rancher hosts.
 
 
-Run all playbook at once
+1. To execute all playbooks at once, run the following command:
 ansible-playbook -i hosts.ini mainplaybook.yml
 
-haproxy.cfg
-This configures HAProxy as a load balancer.
-Make sure to update the ip and port settings in haproxy.cfg before running.
-mainplaybook.yml
+2. To execute playbooks individually, run the following command:
 
-hosts.ini.sh
-This creates the hosts.ini file with user inputs.
+i. Install and configure Keepalived and HAProxy
+To install and configure Keepalived and HAProxy, run the following command:
+ansible-playbook playbook.yml --tags install_haproxy,configure_haproxy
 
-Run seperate playbooks individually:
 
-install_kubernetes
-This installs all Kubernetes components on the master and worker nodes.
-To run:
-ansible-playbook -i hosts.ini --limit 'master:worker' install_kubernetes.yml
-This will exclude the load balancer group.
+ii. To install Kubernetes, run the following command:
+ansible-playbook playbook.yml --tags install_kubernetes
+Initialize Kubernetes on first master
 
-init_kubernetes.yml
-This initializes the Kubernetes cluster.
-To run:
-ansible-playbook -i hosts.ini --limit 'master[0]' init_kubernetes.yml
-This will use the first master node in hosts.ini as the primary master and initialize the cluster.
+iii. To initialize Kubernetes on the first master host, run the following command:
+ansible-playbook playbook.yml --tags init_kubernetes
+ Join the worker nodes
 
-install_haproxy.yml
-This installs HAProxy on the load balancer nodes.
-To run:
-ansible-playbook -i hosts.ini --limit 'loadbalancer' install_haproxy.yml
+iv. To join the worker nodes to the Kubernetes cluster, run the following command:
+ansible-playbook playbook.yml --tags join_worker
+Join the master nodes
 
-set_hostname.yml
-This sets the hostname of nodes.
-To run:
-ansible-playbook set_hostname.yml -i inventory.ini
+v. To join the master nodes to the Kubernetes cluster, run the following command:
+ansible-playbook playbook.yml --tags join_master
+Install Rancher
+
+vi. To install Rancher, run the following command:
+ansible-playbook playbook.yml --tags rancher_setup
