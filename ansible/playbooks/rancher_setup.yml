@@ -1,72 +1,58 @@
-- hosts: rancher_server
+---
+- hosts: rancher
+  become: true
+
   tasks:
-    - name: Update APT cache
+    - name: Install aptitude
       apt:
-        update_cache: yes
-    
-    - name: Install prerequisites
+        name: aptitude
+        state: latest
+        update_cache: true
+
+    - name: Install required system packages
       apt:
-        name:
+        pkg:
           - apt-transport-https
           - ca-certificates
           - curl
           - software-properties-common
-          - gnupg2
-    
-    - name: Execute command to import Docker GPG key
-      ansible.builtin.apt_key:
-        keyring: /etc/apt/trusted.gpg.d/docker.gpg
-        state: present
+          - python3-pip
+          - virtualenv
+          - python3-setuptools
+        state: latest
+        update_cache: true
+
+    - name: Add Docker GPG apt Key
+      apt_key:
         url: https://download.docker.com/linux/ubuntu/gpg
-    
-    - name: Add Docker repository
-      apt_repository:
-        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
         state: present
-        filename: docker
-    
-    - name: Update APT cache again
-      apt:
-        update_cache: yes
-    
-    - name: Install Docker
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu jammy stable
+        state: present
+
+    - name: Update apt and install docker-ce
       apt:
         name: docker-ce
-        state: present
-    
-    - name: Install Docker Compose
+        state: latest
+        update_cache: true
+
+    - name: Install Docker Module for Python
+      pip:
+        name: docker
+
+    - name: Install docker-compose from official github repo
+      remote_user: ansible_ubuntu_demo
       get_url:
-        url: "https://github.com/docker/compose/releases/download/v2.3.3/docker-compose-linux-x86_64"
-        dest: "/usr/local/bin/docker-compose"
-    
-    # Grant execute permission to Docker Compose
-    - name: Chmod +x Docker Compose
-      file:
-        path: /usr/local/bin/docker-compose
-        mode: 'a+x'
-    
-    # Pull the latest Rancher image from Docker Hub
-    - name: Pull Rancher image
-      docker_image:
-        name: rancher/rancher:latest
-        source: pull
-    
-    # Create a Docker volume for storing Rancher data
-    - name: Create rancher-data volume
-      docker_volume:
-        name: rancher-data
-        driver: local
-    
-    # Deploy Rancher service using the Rancher image and the rancher-data volume
-    - name: Deploy Rancher service
-      docker_service:
-        name: rancher
-        image: rancher/rancher:latest
-        state: present
-        args:
-          - container_name: rancher
-        ports:
-          - 80:80
-          - 443:443
-        volumes:
-          - rancher-data:/var/lib/rancher
+       url : https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
+       dest: /usr/local/bin/docker-compose
+       mode: 'u+x,g+x'
+
+    - name: Copy docker-compose  file
+      copy:
+        src: docker-compose.yml
+        dest: /etc/docker-compose.yml
+
+    - name: Start docker-compose file
+      command: sudo docker compose -f /etc/docker-compose.yml up -d 

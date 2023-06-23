@@ -8,11 +8,14 @@
       command: kubeadm token create --print-join-command
       register: worker_join_token
 
-    - name: Retrieve Worker Join Token
+    - name: Set fact for Worker Join Token
       set_fact:
         worker_join_command: "{{ worker_join_token.stdout_lines[0] }}"
 
-    - name: Execute Worker Join Command on Workernodes
-      command: "{{ worker_join_command }}"
-      become_user: root
-      when: "'worker' in group_names"
+- name: Execute Worker Join Command on Workernodes
+  hosts: worker
+  become: true
+  become_user: root
+  tasks:
+    - name: Join Worker Node to Cluster
+      command: "{{ hostvars[groups['master'][0]]['worker_join_command'] }}"

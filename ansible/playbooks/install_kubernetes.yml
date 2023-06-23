@@ -110,9 +110,6 @@
     - name: Disable cgroup
       command: sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="\(.*\)"/GRUB_CMDLINE_LINUX_DEFAULT="\1 systemd.unified_cgroup_hierarchy=0"/' /etc/default/grub
 
-    - name: Update grup
-      command: sudo update-grub
-
     - name: Install Kubernetes packages
       apt:
         name: "{{ item }}"
@@ -125,5 +122,11 @@
     - name: Hold Kubernetes packages
       command: apt-mark hold kubelet kubeadm kubectl
 
-    - name: SElinux utils
-      command: sudo apt install selinux-utils
+    - name: Install SELinux utils
+      apt:
+        name: selinux-utils
+        state: present
+
+  handlers:
+    - name: Update GRUB
+      command: sudo update-grub

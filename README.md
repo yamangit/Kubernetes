@@ -29,7 +29,7 @@ ansible-playbook -i hosts.ini mainplaybook.yml
 
  ######   i. Install and configure Keepalived and HAProxy
     To install and configure Keepalived and HAProxy, run the following command:
-    ansible-playbook playbook.yml --tags install_haproxy,configure_haproxy
+    ansible-playbook playbook.yml --tags haproxy
 
  ######   ii. To install Kubernetes, run the following command:
     ansible-playbook playbook.yml --tags install_kubernetes

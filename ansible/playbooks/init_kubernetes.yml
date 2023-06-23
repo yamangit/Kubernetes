@@ -21,6 +21,8 @@
       become_user: root
       command: chown $USER:$USER $HOME/.kube/config
 
+    - name: Kubectl from root
+      command: sudo cp $HOME/.kube/config /root/.kube/config
     - name: Get Kubernetes nodes
       command: kubectl get nodes -o wide
 
