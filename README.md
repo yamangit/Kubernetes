@@ -1,5 +1,4 @@
-## Kubernetes
-### This repository contains Bash and Ansible scripts for installing and configuring a Kubernetes 1.27 cluster on ubuntu 22.04.
+### This repository contains Bash and Ansible scripts for installing and configuring a Kubernetes 1.27, HAproxy and Rancher on a set of hosts on ubuntu 22.04.
 #### Usage
 To use the scripts in this repository, follow these steps:
 1. Clone the repository to your Ansible controller (local machine) and to all the nodes in the cluster using the following command:
