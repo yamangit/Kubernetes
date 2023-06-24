@@ -27,11 +27,17 @@ To use the scripts in this repository, follow these steps:
    sudo bash hosts.ini.sh
    ```
 
-5. Execute the ssh-copy-id command from the Ansible host to all other IPs on the hosts.ini file, here is example of the command:
+5. View hosts.ini file 
 ```sh
-ssh-copy-id desk@192.168.101.109
+cat /Kubernetes/ansible/hosts.ini
 ```
 
+6. With the information on hosts.ini file, execute the ssh-copy-id command from the Ansible host to all other IPs on the hosts.ini file, here is example of the command:
+```sh
+ssh-copy-id desk@192.168.101.109
+ssh-copy-id desk@192.168.101.110
+ssh-copy-id desk@192.168.101.111
+```
 This command will copy the SSH public key from the Ansible host to other hosts specified in the hosts.ini file, allowing you to access the hosts using SSH without a password.
 
 
