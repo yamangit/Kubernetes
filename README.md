@@ -1,5 +1,5 @@
 ## Kubernetes
-### This repository contains Bash and Ansible scripts for managing a Kubernetes cluster.
+### This repository contains Bash and Ansible scripts for installig and configuring a Kubernetes cluster.
 #### Usage
 To use the scripts in this repository, follow these steps:
 1. Clone the repository to your local machine using the following command:
@@ -36,6 +36,7 @@ This command will copy the SSH public key from the Ansible host to all other hos
 
 
 # Detailed README
+
 ## Ansible Playbook for Kubernetes, HAproxy and Rancher
 This Ansible playbook will install and configure Kubernetes, HAproxy and Rancher on a set of hosts.
 ## Requirements
