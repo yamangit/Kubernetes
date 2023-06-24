@@ -51,6 +51,7 @@ cd /Kubernetes/ansible
 ```sh
  ansible-playbook -i hosts.ini mainplaybook.yml 
 ```
+Note: haproxy.cfg, init_kubernetes.yml needs to be updated with the correct IP addresses and ports of the nodes before running mainplaybook.yml
 
 # Detailed README
 
