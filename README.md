@@ -8,7 +8,7 @@ To use the scripts in this repository, follow these steps:
    ```
 
 2. Navigate to the repository directory
-```sh cd Kubernetes ```
+```cd Kubernetes ```
 
 3. Make the Bash scripts executable using the following command:
    sudo chmod +x -R bash_files
