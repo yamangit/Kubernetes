@@ -17,14 +17,15 @@ To use the scripts in this repository, follow these steps:
    sudo chmod +x -R bash_files
    ```
 
-4. Execute hosts.ini.sh file on ansible controller node and execute on_all_nodes.sh command on all the nodes listed on hosts.ini file respectively
-  ```sh
-   sudo bash hosts.ini.sh
-  ```
-   and
+4. Execute on_all_nodes.sh command on all the nodes of your cluster, it prints useful information about your nodes after that execute hosts.ini.sh file on ansible controller node with the information received from the output of on_all_nodes.sh.
    ```sh
    sudo bash on_all_nodes.sh
    ```
+   and
+
+  ```sh
+   sudo bash hosts.ini.sh
+  ```
 
 5. To execute the ssh-keygen command from the Ansible host to all other IPs on the hosts.ini file, run the following command:
 ```sh

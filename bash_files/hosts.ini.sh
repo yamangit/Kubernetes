@@ -4,6 +4,9 @@
 echo -n "Enter the number of master hosts: "
 read num_master_hosts
 
+# Create the hosts.ini file
+touch hosts.ini
+
 # Loop through the number of master hosts and get the hostname, IP address, username, and path to the private key for each host
 echo "[master]" >> hosts.ini
 for i in $(seq 1 $num_master_hosts); do
@@ -72,5 +75,6 @@ for i in $(seq 1 $num_rancher_hosts); do
   echo "$rancher_hostname ansible_host=$rancher_ip ansible_user=$rancher_user ansible_ssh_private_key=$rancher_private_key" >> hosts.ini
 done
 
-# Save the hosts.ini file
-echo "The hosts.ini file has been created."
+# Move the hosts.ini file to the ansible directory
+echo "The hosts.ini file has been created inside ansible folder."
+mv hosts.ini ../ansible/
