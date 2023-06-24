@@ -1,5 +1,5 @@
 ## Kubernetes
-### This repository contains Bash and Ansible scripts for installig and configuring a Kubernetes cluster.
+### This repository contains Bash and Ansible scripts for installing and configuring a Kubernetes cluster.
 #### Usage
 To use the scripts in this repository, follow these steps:
 1. Clone the repository to your local machine using the following command:
@@ -23,16 +23,16 @@ To use the scripts in this repository, follow these steps:
    ```
    and
 
-  ```sh
+   ```sh
    sudo bash hosts.ini.sh
-  ```
+   ```
 
-5. To execute the ssh-keygen command from the Ansible host to all other IPs on the hosts.ini file, run the following command:
+5. Execute the ssh-copy-id command from the Ansible host to all other IPs on the hosts.ini file, here is example of the command:
 ```sh
- ansible all -i ansible/hosts.ini -m authorized_key -a "user=root key='{{ lookup('file', '~/.ssh/id_rsa.pub') }}'" 
+ssh-copy-id desk@192.168.101.109
 ```
 
-This command will copy the SSH public key from the Ansible host to all other hosts specified in the hosts.ini file, allowing you to access the hosts using SSH without a password.
+This command will copy the SSH public key from the Ansible host to other hosts specified in the hosts.ini file, allowing you to access the hosts using SSH without a password.
 
 
 # Detailed README
