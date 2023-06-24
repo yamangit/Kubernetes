@@ -3,10 +3,10 @@
 #### Usage
 To use the scripts in this repository, follow these steps:
 1. Clone the repository to your local machine using the following command:
-   '''sh
-    sudo git clone https://github.com/PrabhatNew/Kubernetes.git
-    '''
-
+   ```sh
+   sudo git clone https://github.com/PrabhatNew/Kubernetes.git
+   ```
+   
 2. Navigate to the repository directory:
    cd Kubernetes
 
