@@ -8,18 +8,28 @@ To use the scripts in this repository, follow these steps:
    ```
 
 2. Navigate to the repository directory
-```sh 
+   ```sh 
    cd Kubernetes
-```
+   ```
 
 3. Make the Bash scripts executable using the following command:
-  ``` sudo chmod +x -R bash_files ```
+   ```sh
+   sudo chmod +x -R bash_files
+   ```
 
 4. Execute hosts.ini.sh file on ansible controller node and execute on_all_nodes.sh command on all the nodes listed on hosts.ini file respectively
-  ``` sudo bash hosts.ini.sh ``` and ``` sudo bash on_all_nodes.sh ```
+  ```sh
+   sudo bash hosts.ini.sh
+  ```
+   and
+   ```sh
+   sudo bash on_all_nodes.sh
+   ```
 
 5. To execute the ssh-keygen command from the Ansible host to all other IPs on the hosts.ini file, run the following command:
-``` ansible all -i ansible/hosts.ini -m authorized_key -a "user=root key='{{ lookup('file', '~/.ssh/id_rsa.pub') }}'" ```
+```sh
+ ansible all -i ansible/hosts.ini -m authorized_key -a "user=root key='{{ lookup('file', '~/.ssh/id_rsa.pub') }}'" 
+```
 
 This command will copy the SSH public key from the Ansible host to all other hosts specified in the hosts.ini file, allowing you to access the hosts using SSH without a password.
 
@@ -50,25 +60,39 @@ To use this playbook, you will need to create a hosts.ini file that lists the ho
 
 ## Playbook execution
 #### 1. To execute all playbooks at once, run the following command:
-``` ansible-playbook -i hosts.ini mainplaybook.yml ```
+```sh
+ ansible-playbook -i hosts.ini mainplaybook.yml 
+```
 
 #### 2. To execute playbooks individually, run the following command:
 
  ######   i. Install and configure Keepalived and HAProxy
     To install and configure Keepalived and HAProxy, run the following command:
-``` ansible-playbook playbook.yml --tags haproxy ```
+```sh
+ ansible-playbook playbook.yml --tags haproxy 
+```
 
  ######   ii. To install Kubernetes, run the following command:
-``` ansible-playbook playbook.yml --tags install_kubernetes ```
+```sh
+ ansible-playbook playbook.yml --tags install_kubernetes 
+```
 
  ######   iii. To initialize Kubernetes on the first master host, run the following command:
-``` ansible-playbook playbook.yml --tags init_kubernetes ```
+```sh
+ ansible-playbook playbook.yml --tags init_kubernetes
+```
 
  ######   iv. To join the worker nodes to the Kubernetes cluster, run the following command:
-``` ansible-playbook playbook.yml --tags join_worker ```
+```sh
+ ansible-playbook playbook.yml --tags join_worker 
+```
 
  ######  v. To join the master nodes to the Kubernetes cluster, run the following command:
-``` ansible-playbook playbook.yml --tags join_master ```
+```sh
+ ansible-playbook playbook.yml --tags join_master 
+```
 
  ######   vi. To install Rancher, run the following command:
-``` ansible-playbook playbook.yml --tags rancher_setup ```
+```sh
+ ansible-playbook playbook.yml --tags rancher_setup 
+```
