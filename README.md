@@ -1,4 +1,30 @@
-# Ansible Playbook for Kubernetes, HAproxy and Rancher
+## Kubernetes
+### This repository contains Bash and Ansible scripts for managing a Kubernetes cluster.
+#### Usage
+To use the scripts in this repository, follow these steps:
+1. Clone the repository to your local machine using the following command:
+   $sudo git clone https://github.com/PrabhatNew/Kubernetes.git
+
+2. Navigate to the repository directory:
+   $cd Kubernetes
+
+3. Make the Bash scripts executable using the following command:
+   $sudo chmod +x -R bash_files
+
+4. Run the Bash script using the following command:
+   $sudo bash hosts.ini.sh and $sudo bash on_all_nodes.sh
+
+Execute hosts.ini.sh file on ansible controller node and execute on_all_nodes.sh command on all the nodes listed on hosts.ini file
+
+To execute the ssh-keygen command from the Ansible host to all other IPs on the hosts.ini file, run the following command:
+
+$ansible all -i ansible/hosts.ini -m authorized_key -a "user=root key='{{ lookup('file', '~/.ssh/id_rsa.pub') }}'"
+
+This command will copy the SSH public key from the Ansible host to all other hosts specified in the hosts.ini file, allowing you to access the hosts using SSH without a password.
+
+
+#Detailed README
+## Ansible Playbook for Kubernetes, HAproxy and Rancher
 This Ansible playbook will install and configure Kubernetes, HAproxy and Rancher on a set of hosts.
 ## Requirements
 1. Ansible 2.9+
