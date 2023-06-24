@@ -1,4 +1,4 @@
-### This repository contains Ansible playbooks and Bash scripts for installing and configuring a Kubernetes 1.27, HAproxy and Rancher on a set of hosts on ubuntu 22.04.
+### This repository contains Ansible playbooks and Bash scripts for installing and configuring a Kubernetes v1.27 cluster, HAproxy and Rancher on a set of hosts on ubuntu 22.04.
 #### Usage
 To use the scripts in this repository, follow these steps:
 1. Clone the repository to your Ansible controller (local machine) and to all the nodes in the cluster using the following command:
@@ -19,7 +19,7 @@ To use the scripts in this repository, follow these steps:
    cd bash_files
    ```
 
-4. The first step is to run the "on_all_nodes.sh" command on all the nodes in your cluster, which will provide you with useful information about each individual node. Once you have this information, you can then execute the "hosts.ini.sh" file on your Ansible controller node by inputting the data gathered from the output of the "on_all_nodes.sh" command. 
+4. The first step is to run the "on_all_nodes.sh" command on all the nodes in your cluster, which will provide you with useful information about each individual node. Once you have this information, you can then execute the "hosts.ini.sh" file on your Ansible controller node and enter the data gathered from the "on_all_nodes.sh" command. 
    ```sh
    bash on_all_nodes.sh
    ```
