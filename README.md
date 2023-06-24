@@ -16,6 +16,9 @@ To use the scripts in this repository, follow these steps:
    ```sh
    sudo chmod +x -R bash_files
    ```
+   ```sh
+   cd bash_files
+   ```
 
 4. The first step is to run the "on_all_nodes.sh" command on all the nodes in your cluster, which will provide you with useful information about each individual node. Once you have this information, you can then execute the "hosts.ini.sh" file on your Ansible controller node by inputting the data gathered from the output of the "on_all_nodes.sh" command. 
    ```sh
