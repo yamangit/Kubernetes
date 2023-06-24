@@ -6,9 +6,9 @@ To use the scripts in this repository, follow these steps:
    ```sh
    sudo git clone https://github.com/PrabhatNew/Kubernetes.git
    ```
-   
-2. Navigate to the repository directory:
-   cd Kubernetes
+
+2. Navigate to the repository directory
+```sh cd Kubernetes ```
 
 3. Make the Bash scripts executable using the following command:
    sudo chmod +x -R bash_files
