@@ -23,7 +23,7 @@ $ansible all -i ansible/hosts.ini -m authorized_key -a "user=root key='{{ lookup
 This command will copy the SSH public key from the Ansible host to all other hosts specified in the hosts.ini file, allowing you to access the hosts using SSH without a password.
 
 
-#Detailed README
+# Detailed README
 ## Ansible Playbook for Kubernetes, HAproxy and Rancher
 This Ansible playbook will install and configure Kubernetes, HAproxy and Rancher on a set of hosts.
 ## Requirements
