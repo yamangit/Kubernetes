@@ -46,12 +46,12 @@ This command will copy the SSH public key from the Ansible host to other hosts s
 
 #### Test Ansible connection to all hosts.
 ```sh
+cd /Kubernetes/ansible
+```
+```sh
 ansible all -m ping -i hosts.ini 
 ```
 ### To execute all playbooks at once, run the following command:
-```sh
-cd /Kubernetes/ansible
-```
 ```sh
  ansible-playbook -i hosts.ini mainplaybook.yml 
 ```
