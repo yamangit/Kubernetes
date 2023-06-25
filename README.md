@@ -40,6 +40,13 @@ ssh-copy-id desk@192.168.101.109
 ssh-copy-id desk@192.168.101.110
 ssh-copy-id desk@192.168.101.111
 ```
+Or use my automated script to do this for you.
+```sh
+cd Kubernetes/bash_files
+```
+```sh
+bash ssh-copy-id_automated
+```
 This command will copy the SSH public key from the Ansible host to other hosts specified in the hosts.ini file, allowing you to access the hosts using SSH without a password.
 
 ## Playbook execution

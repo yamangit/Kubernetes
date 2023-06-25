@@ -97,4 +97,4 @@ done
 
 # Move the hosts.ini file to the ansible directory
 echo "The hosts.ini file has been created inside ansible folder."
-mv hosts.ini ../ansible/
+cp hosts.ini ../ansible/
