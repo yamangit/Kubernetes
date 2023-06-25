@@ -1,0 +1,64 @@
+---
+- name: Configure keepalived
+  hosts: loadbalancer
+  become: true
+  tasks:
+    - name: Create check_apiserver.sh script
+      copy:
+        content: |
+          #!/bin/sh
+
+          errorExit() {
+            echo "*** $@" 1>&2
+            exit 1
+          }
+
+          curl --silent --max-time 2 --insecure https://localhost:6443/ -o /dev/null || errorExit "Error GET https://localhost:6443/"
+          if ip addr | grep -q {{ hostvars[groups['floating_ip'][0]]['ansible_host'] }}; then
+            curl --silent --max-time 2 --insecure https://{{ hostvars[groups['floating_ip'][0]]['ansible_host'] }}:6443/ -o /dev/null || errorExit "Error GET https://{{ hostvars[groups['floating_ip'][0]]['ansible_host'] }}:6443/"
+          fi
+        dest: /etc/keepalived/check_apiserver.sh
+        mode: '0755'
+
+    - name: Set check_apiserver.sh permissions
+      file:
+        path: /etc/keepalived/check_apiserver.sh
+        mode: '0755'
+
+    - name: Create keepalived.conf file
+      copy:
+        content: |
+          vrrp_script check_apiserver {
+            script "/etc/keepalived/check_apiserver.sh"
+            interval 3
+            timeout 10
+            fall 5
+            rise 2
+            weight -2
+          }
+
+          vrrp_instance VI_1 {
+              state BACKUP
+              interface eth1
+              virtual_router_id 1
+              priority 100
+              advert_int 5
+              authentication {
+                  auth_type PASS
+                  auth_pass mysecret
+              }
+              virtual_ipaddress {
+                  {{ hostvars[groups['floating_ip'][0]]['ansible_host'] }}
+              }
+              track_script {
+                  check_apiserver
+              }
+          }
+        dest: /etc/keepalived/keepalived.conf
+        mode: '0644'
+
+    - name: Enable and start keepalived service
+      systemd:
+        name: keepalived
+        enabled: yes
+        state: started

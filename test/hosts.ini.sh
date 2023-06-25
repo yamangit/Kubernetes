@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Call install_ansible.sh script to install Ansible
-./install_ansible.sh
-
 # Get the user input for the number of master hosts
 echo -n "Enter the number of master hosts: "
 read num_master_hosts
@@ -76,23 +73,6 @@ for i in $(seq 1 $num_rancher_hosts); do
   echo -n "Enter the path to the private key for rancher host $i: "
   read rancher_private_key
   echo "$rancher_hostname ansible_host=$rancher_ip ansible_user=$rancher_user ansible_ssh_private_key=$rancher_private_key" >> hosts.ini
-done
-
-# Get the user input for the number of floating_ip hosts
-echo -n "Enter the number of floating IP hosts: "
-read num_floating_ip_hosts
-
-# Loop through the number of floating IP hosts and get the hostname, IP address, username, and path to the private key for each host
-echo "[floating_ip]" >> hosts.ini
-for i in $(seq 1 $num_floating_ip_hosts); do
-  echo -n "Enter the hostname of floating_ip host $i: "
-  read floating_ip_hostname
-  echo -n "Enter the IP address of floating_ip host $i:read floating_ip_ip
-  echo -n "Enter the username for floating_ip host $i: "
-  read floating_ip_user
-  echo -n "Enter the path to the private key for floating_ip host $i: "
-  read floating_ip_private_key
-  echo "$floating_ip_hostname ansible_host=$floating_ip_ip ansible_user=$floating_ip_user ansible_ssh_private_key=$floating_ip_private_key" >> hosts.ini
 done
 
 # Move the hosts.ini file to the ansible directory
