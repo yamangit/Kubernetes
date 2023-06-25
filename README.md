@@ -40,7 +40,7 @@ ssh-copy-id desk@192.168.101.109
 ssh-copy-id desk@192.168.101.110
 ssh-copy-id desk@192.168.101.111
 ```
-Or use my automated script to do this for you.
+### Or use my automated script to do this for you.
 ```sh
 cd Kubernetes/bash_files
 ```
