@@ -49,7 +49,7 @@
        dest: /usr/local/bin/docker-compose
        mode: 'u+x,g+x'
 
-    - name: Copy docker-compose  file
+    - name: Copy docker-compose file
       copy:
         src: docker-compose.yml
         dest: /etc/docker-compose.yml
