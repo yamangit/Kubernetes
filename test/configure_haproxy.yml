@@ -4,7 +4,7 @@
   tasks:
     - name: Copy HAProxy configuration file
       copy:
-        src: haproxy.cfg
+        src: ../bash_files/haproxy.cfg
         dest: /etc/haproxy/haproxy.cfg
 
     - name: Unmask HAProxy service
