@@ -1,4 +1,4 @@
-### This repository contains Ansible playbooks and Bash scripts to setup a Kubernetes cluster along with HAProxy and Rancher on ubuntu 22.04.
+### This repository contains Ansible playbooks and Bash scripts to setup a Kubernetes cluster along with HAProxy and Rancher on Ubuntu 22.04.
 
 ## Requirements
 1. Ubuntu 22.04
@@ -6,11 +6,12 @@
 3. The Ansible control node (where you'll run the Ansible commands) must be able to SSH to all the nodes without a password. This can be done by generating SSH keys and copying the public key to all the nodes.
 
 ## Usage
-To use this playbook, you will need to create a hosts.ini file that lists the hosts that you want to install Kubernetes, HAproxy and Rancher on. The hosts file should be in the same directory as the playbook.
+To use this playbook, you will need to create a hosts.ini file that lists the hosts that you want to install Kubernetes, HAproxy and Rancher on. The hosts file should be in the same directory as the mainplaybook.yml.
 
 ## Pre-requisites
-1. Execute the hosts.ini.sh bash script to create hosts.ini file and follow instructions carefully. The hosts.ini file will be created with the user inputted hostname, IP addresses, username, location to private key of all the nodes under the corresponding groups. 
-2. The nodes must allow port 22 for SSH, port 6443 for Kubernetes API server and 2379-2380 for etcd. These ports need to be opened on any firewall.
+1. Execute on_all_nodes.sh bash script on all nodes to get information about your hosts.
+2. Execute the hosts.ini.sh bash script and fill the information obtained from running on_all_nodes.sh to create hosts.ini file. The hosts.ini file will be created with the user inputted hostname, IP addresses, username, location to private key of all the nodes. 
+3. The nodes must allow port 22 for SSH, port 6443 for Kubernetes API server and 2379-2380 for etcd. These ports need to be opened on any firewall.
 
 ## The playbook uses the following playbooks:
 * `install_haproxy_keepalived` - Installs HAProxy and keepalived on the loadbalancer hosts.
@@ -81,11 +82,12 @@ cd /Kubernetes/ansible
 ```sh
 ansible all -m ping -i hosts.ini 
 ```
+### Caution donot run mainplaybook.yml if the connection to all hosts is not passed. Instead run playbooks individually.
+
 ### To execute all playbooks at once, run the following command:
 ```sh
  ansible-playbook -i hosts.ini mainplaybook.yml 
 ```
-### Caution donot run mainplaybook.yml if the connection to all hosts is not passed.
 
 #### To execute playbooks individually, run the following command:
 
