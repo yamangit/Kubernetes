@@ -1,21 +1,22 @@
-- name: Generate token on master[0]
+---
+- name: Generate and Execute Master Join Token
   hosts: master[0]
-  tasks:
-    - name: Generate Master Join Token  
-      command: kubeadm token create --print-join-command
-      register: master_join_token   
+  gather_facts: false
+  become: true
 
-    - name: Set Master Join Token as Fact
+  tasks:
+    - name: Generate Master Join Token
+      command: kubeadm token create --print-join-command
+      register: master_join_token
+
+    - name: Set fact for Master Join Token
       set_fact:
         master_join_command: "{{ master_join_token.stdout_lines[0] }}"
 
-    - name: Print Master Join Token
-      debug:
-        var: master_join_command
-
-- name: Execute token on other master nodes     
+- name: Execute Master Join Command on Masternodes
   hosts: master[1:]
-  tasks:     
-    - name: Execute Master Join Command
-      command: "{{ hostvars['master[0]']['master_join_command'] }}"
-      become_user: root
+  become: true
+  become_user: root
+  tasks:
+    - name: Join Master Node to Cluster
+      command: "{{ hostvars[groups['master'][0]]['master_join_command'] }}"
