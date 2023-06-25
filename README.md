@@ -90,8 +90,7 @@ To use this playbook, you will need to create a hosts.ini file that lists the ho
 
 #### 2. To execute playbooks individually, run the following command:
 
- #####   i. Install and configure Keepalived and HAProxy
-    To install and configure Keepalived and HAProxy, run the following command:
+ #####   i. To install and configure Keepalived and HAProxy, run the following command:
 ```sh
  ansible-playbook playbook.yml --tags haproxy 
 ```
