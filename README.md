@@ -55,7 +55,6 @@ ansible all -m ping -i hosts.ini
 ```sh
  ansible-playbook -i hosts.ini mainplaybook.yml 
 ```
-Note: haproxy.cfg, init_kubernetes.yml, check_apiserver.sh, keepalived.conf needs to be updated with the correct IP addresses and ports of the nodes before running mainplaybook.yml
 
 # Detailed README
 
