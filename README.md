@@ -82,9 +82,9 @@ cd /Kubernetes/ansible
 ```sh
 ansible all -m ping -i hosts.ini 
 ```
-### Caution donot run mainplaybook.yml if the connection to all hosts is not passed. Instead run playbooks individually.
+#### Caution donot run mainplaybook.yml if the connection to all hosts is not passed. Instead run playbooks individually.
 
-### To execute all playbooks at once, run the following command:
+#### To execute all playbooks at once, run the following command:
 ```sh
  ansible-playbook -i hosts.ini mainplaybook.yml 
 ```
