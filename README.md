@@ -62,39 +62,9 @@ ansible all -m ping -i hosts.ini
 ```sh
  ansible-playbook -i hosts.ini mainplaybook.yml 
 ```
+### Caution donot run mainplaybook.yml if the connection to all hosts is not passed.
 
-# Detailed README
-
-## Ansible Playbook for Kubernetes, HAproxy and Rancher
-This Ansible playbook will install and configure Kubernetes, HAproxy and Rancher on a set of hosts.
-## Requirements
-1. Ansible 2.9+
-2. The Ansible control node (where you'll run the Ansible commands) must be able to SSH to all the nodes without a password. This can be done by generating SSH keys and copying the public key to all the nodes.
-
-## Usage
-To use this playbook, you will need to create a hosts.ini file that lists the hosts that you want to install Kubernetes and Rancher on. The hosts file should be in the same directory as the playbook.
-
-## Pre-requisites
-1. Execute the hosts.ini.sh bash script to create hosts.ini file and follow instructions carefully. The hosts.ini file will be created with the user inputted hostname, IP addresses, username, location to private key of all the nodes under the corresponding groups. 
-2. The nodes must allow port 22 for SSH, port 6443 for Kubernetes API server and 2379-2380 for etcd. These ports need to be opened on any firewall.
-
-## The playbook uses the following playbooks:
-* `install_haproxy_keepalived` - Installs HAProxy and keepalived on the loadbalancer hosts.
-* `configure_haproxy` - Configures HAProxy to load balance traffic to the Kubernetes masters.
-* `configure_keepalived` - Configures keepalived to health check HAProxy.
-* `install_kubernetes` - Installs Kubernetes on the master and worker hosts.
-* `init_kubernetes` - Initializes Kubernetes on the first master host.
-* `join_worker` - Joins the worker nodes to the Kubernetes cluster.
-* `join_master` - Joins the master nodes to the Kubernetes cluster.
-* `rancher_setup` - Installs Rancher on the rancher hosts.
-
-## Playbook execution
-#### 1. To execute all playbooks at once, run the following command:
-```sh
- ansible-playbook -i hosts.ini mainplaybook.yml 
-```
-
-#### 2. To execute playbooks individually, run the following command:
+#### To execute playbooks individually, run the following command:
 
  #####   i. To install Keepalived and HAProxy, run the following command:
 ```sh
@@ -134,3 +104,28 @@ To use this playbook, you will need to create a hosts.ini file that lists the ho
 ```sh
   ansible-playbook -i hosts.ini playbooks/rancher_setup.yml 
 ```
+
+# Detailed README
+
+## Ansible Playbook for Kubernetes, HAproxy and Rancher
+This Ansible playbook will install and configure Kubernetes, HAproxy and Rancher on a set of hosts.
+## Requirements
+1. Ansible 2.9+
+2. The Ansible control node (where you'll run the Ansible commands) must be able to SSH to all the nodes without a password. This can be done by generating SSH keys and copying the public key to all the nodes.
+
+## Usage
+To use this playbook, you will need to create a hosts.ini file that lists the hosts that you want to install Kubernetes, HAproxy and Rancher on. The hosts file should be in the same directory as the playbook.
+
+## Pre-requisites
+1. Execute the hosts.ini.sh bash script to create hosts.ini file and follow instructions carefully. The hosts.ini file will be created with the user inputted hostname, IP addresses, username, location to private key of all the nodes under the corresponding groups. 
+2. The nodes must allow port 22 for SSH, port 6443 for Kubernetes API server and 2379-2380 for etcd. These ports need to be opened on any firewall.
+
+## The playbook uses the following playbooks:
+* `install_haproxy_keepalived` - Installs HAProxy and keepalived on the loadbalancer hosts.
+* `configure_haproxy` - Configures HAProxy to load balance traffic to the Kubernetes masters.
+* `configure_keepalived` - Configures keepalived to health check HAProxy.
+* `install_kubernetes` - Installs Kubernetes on the master and worker hosts.
+* `init_kubernetes` - Initializes Kubernetes on the first master host.
+* `join_worker` - Joins the worker nodes to the Kubernetes cluster.
+* `join_master` - Joins the master nodes to the Kubernetes cluster.
+* `rancher_setup` - Installs Rancher on the rancher hosts.
