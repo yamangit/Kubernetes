@@ -87,7 +87,8 @@ echo "[floating_ip]" >> hosts.ini
 for i in $(seq 1 $num_floating_ip_hosts); do
   echo -n "Enter the hostname of floating_ip host $i: "
   read floating_ip_hostname
-  echo -n "Enter the IP address of floating_ip host $i:read floating_ip_ip
+  echo -n "Enter the IP address of floating_ip host $i: "
+  read floating_ip_ip
   echo -n "Enter the username for floating_ip host $i: "
   read floating_ip_user
   echo -n "Enter the path to the private key for floating_ip host $i: "
