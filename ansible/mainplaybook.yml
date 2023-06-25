@@ -1,44 +1,27 @@
-- name: Install and configure Keepalived and HAProxy
-  hosts: loadbalancer
-  roles:
-    #- haproxy_keepalived
-    - install_haproxy_keepalived
-    - configure_haproxy
-    - configure_keepalived
-  tags:
-    - haproxy
+- hosts: all
+  become: yes
+  tags: automate
+  tasks:
+- name: Install HAproxy and Keepalived
+  import_playbook: playbooks/install_haproxy_keepalived.yml
+
+- name: Configure HAproxy
+  import_playbook: playbooks/configure_haproxy.yml
+
+- name: Configure Keepalived
+  import_playbook: playbooks/configure_keepalived.yml
 
 - name: Install Kubernetes
-  hosts: master:worker
-  roles:
-    - install_kubernetes
-  tags:  
-    - install_kubernetes
+  import_playbook: playbooks/install_kubernetes.yml
 
 - name: Initialize Kubernetes on first master
-  hosts: master[0]
-  roles:
-    - init_kubernetes
-  tags:  
-    - init_kubernetes
+  import_playbook: playbooks/init_kubernetes.yml
 
 - name: Join the worker nodes
-  hosts: worker
-  roles:
-    - join_worker
-  tags:  
-    - join_worker
+  import_playbook: playbooks/join_worker.yml
 
 - name: Join the master nodes
-  hosts: "{{ groups['master'] | skip(0) }}"
-  roles:
-    - join_master
-  tags:  
-    - join_master
+  import_playbook: playbooks/join_master.yml
 
 - name: Install Rancher
-  hosts: rancher
-  roles:
-    - rancher_setup
-  tags:  
-    - rancher_setup
+  import_playbook: playbooks/rancher_setup.yml

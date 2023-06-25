@@ -96,32 +96,41 @@ To use this playbook, you will need to create a hosts.ini file that lists the ho
 
 #### 2. To execute playbooks individually, run the following command:
 
- #####   i. To install and configure Keepalived and HAProxy, run the following command:
+ #####   i. To install Keepalived and HAProxy, run the following command:
 ```sh
- ansible-playbook playbook.yml --tags haproxy 
+ ansible-playbook -i hosts.ini playbooks/install_haproxy_keepalived.yml
+```
+ 
+ #####   ii. To configure Keepalived, run the following command:
+ ```sh
+ ansible-playbook -i hosts.ini playbooks/configure_keepalived.yml
 ```
 
- #####   ii. To install Kubernetes, run the following command:
+ #####   iii. To configure HAproxy, run the following command:
+ ```sh
+ ansible-playbook -i hosts.ini playbooks/configure_haproxy.yml
+```
+ #####   iv. To install Kubernetes, run the following command:
 ```sh
- ansible-playbook playbook.yml --tags install_kubernetes 
+ ansible-playbook -i hosts.ini playbooks/install_kubernetes.yml 
 ```
 
- #####   iii. To initialize Kubernetes on the first master host, run the following command:
+ #####   v. To initialize Kubernetes on the first master host, run the following command:
 ```sh
- ansible-playbook playbook.yml --tags init_kubernetes
+  ansible-playbook -i hosts.ini playbooks/init_kubernetes.yml
 ```
 
- #####   iv. To join the worker nodes to the Kubernetes cluster, run the following command:
+ #####   vi. To join the worker nodes to the Kubernetes cluster, run the following command:
 ```sh
- ansible-playbook playbook.yml --tags join_worker 
+  ansible-playbook -i hosts.ini playbooks/join_worker.yml 
 ```
 
- #####  v. To join the master nodes to the Kubernetes cluster, run the following command:
+ #####  vii. To join the master nodes to the Kubernetes cluster, run the following command:
 ```sh
- ansible-playbook playbook.yml --tags join_master 
+  ansible-playbook -i hosts.ini playbooks/join_master.yml 
 ```
 
- #####   vi. To install Rancher, run the following command:
+ #####   viii. To install Rancher, run the following command:
 ```sh
- ansible-playbook playbook.yml --tags rancher_setup 
+  ansible-playbook -i hosts.ini playbooks/rancher_setup.yml 
 ```
