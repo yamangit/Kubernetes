@@ -43,15 +43,15 @@ ssh-copy-id desk@192.168.101.111
 This command will copy the SSH public key from the Ansible host to other hosts specified in the hosts.ini file, allowing you to access the hosts using SSH without a password.
 
 ## Playbook execution
-### To execute all playbooks at once, run the following command:
-```sh
-cd /Kubernetes/ansible
-```
+
 #### Test Ansible connection to all hosts.
 ```sh
 ansible all -m ping -i hosts.ini 
 ```
-
+### To execute all playbooks at once, run the following command:
+```sh
+cd /Kubernetes/ansible
+```
 ```sh
  ansible-playbook -i hosts.ini mainplaybook.yml 
 ```
