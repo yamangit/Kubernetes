@@ -2,9 +2,9 @@
   hosts: loadbalancer
   roles:
     #- haproxy_keepalived
-    #- configure_keepalived
-    - install_haproxy
+    - install_haproxy_keepalived
     - configure_haproxy
+    - configure_keepalived
   tags:
     - haproxy
 

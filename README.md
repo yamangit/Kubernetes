@@ -26,7 +26,7 @@ To use the scripts in this repository, follow these steps:
    and
 
    ```sh
-   bash hosts.ini.sh
+   sudo bash hosts.ini.sh
    ```
 
 5. View hosts.ini file 
@@ -47,6 +47,11 @@ This command will copy the SSH public key from the Ansible host to other hosts s
 ```sh
 cd /Kubernetes/ansible
 ```
+#### Test Ansible connection to all hosts.
+```sh
+ansible all -m ping -i hosts.ini 
+```
+
 ```sh
  ansible-playbook -i hosts.ini mainplaybook.yml 
 ```

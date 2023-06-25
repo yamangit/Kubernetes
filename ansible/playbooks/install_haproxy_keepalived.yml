@@ -15,3 +15,12 @@
 
   - name: Intall python utils
     command: sudo apt-get install -y policycoreutils-python-utils
+
+  - name: Update APT cache
+    apt:
+      update_cache: yes
+
+  - name: Install Keepalived
+    apt:
+      name: keepalived 
+      state: present

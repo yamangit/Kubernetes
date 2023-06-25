@@ -1,0 +1,26 @@
+- name: Copy Keepalived configuration
+  hosts: loadbalancer
+  become: true
+  tasks:
+    - name: Copy keepalived configuration file
+      copy:
+        src: ../bash_files/keepalived.conf
+        dest: /etc/keepalived/keepalived.conf
+
+    - name: Copy check_apiserver.sh file
+      copy:
+        src: ../bash_files/check_apiserver.sh
+        dest: /etc/keepalived/check_apiserver.sh
+
+    - name: Execute permission
+      command: sudo chmod +x /etc/keepalived/check_apiserver.sh
+
+    - name: Enable Keepalived service
+      command: sudo systemctl enable keepalived
+      notify: restart haproxy
+
+  handlers:
+    - name: restart keepalived
+      service:
+        name: keepalived
+        state: restarted
