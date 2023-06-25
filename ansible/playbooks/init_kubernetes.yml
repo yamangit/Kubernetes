@@ -5,7 +5,7 @@
     #     loadbalancer_ip: "{{ hostvars[groups['loadbalancer'][0]].ansible_host }}"
         
     - name: Initialize Kubernetes control plane
-      command: "sudo kubeadm init --control-plane-endpoint=192.168.101.130:6443 --upload-certs --pod-network-cidr=10.244.0.0/16 --v=5"
+      command: "sudo kubeadm init --control-plane-endpoint={{ hostvars[groups['master'][0]]['ansible_host'] }}:6443 --upload-certs --pod-network-cidr=10.244.0.0/16 --v=5"
       args:
         creates: /etc/kubernetes/admin.conf
       register: kubeadm_init
