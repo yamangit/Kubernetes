@@ -130,6 +130,6 @@ ansible all -m ping -i hosts.ini
   ansible-playbook -i hosts.ini playbooks/rancher_setup.yml 
 ```
 
-# Contact
-## If you have any questions, please contact me at https://www.linkedin.com/in/prabhat-neupane-426779170
-### Thank you for using this playbook!
+## Contact
+### If you have any questions, please contact me at https://www.linkedin.com/in/prabhat-neupane-426779170
+#### Thank you for using this playbook!
