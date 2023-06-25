@@ -73,8 +73,9 @@ To use this playbook, you will need to create a hosts.ini file that lists the ho
 3. The nodes must allow port 22 for SSH, port 6443 for Kubernetes API server and 2379-2380 for etcd. These ports need to be opened on any firewall.
 
 ## The playbook uses the following playbooks:
-* `install_haproxy` - Installs HAProxy on the loadbalancer hosts.
+* `install_haproxy_keepalived` - Installs HAProxy and keepalived on the loadbalancer hosts.
 * `configure_haproxy` - Configures HAProxy to load balance traffic to the Kubernetes masters.
+* `configure_keepalived` - Configures keepalived to health check HAProxy.
 * `install_kubernetes` - Installs Kubernetes on the master and worker hosts.
 * `init_kubernetes` - Initializes Kubernetes on the first master host.
 * `join_worker` - Joins the worker nodes to the Kubernetes cluster.
