@@ -4,7 +4,7 @@ services:
     image: rancher/rancher:latest
     container_name: rancher
     volumes:
-      - /etc/rancher-data:/var/lib/rancher
+      - mnt/nfs_clientshare/rancher-data:/var/lib/rancher
     ports:
       - 80:80
       - 443:443
