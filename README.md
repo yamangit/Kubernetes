@@ -124,12 +124,15 @@ ansible all -m ping -i hosts.ini
 ```sh
   ansible-playbook -i hosts.ini playbooks/join_master.yml 
 ```
-
- #####   viii. To install Rancher, run the following command:
+#####  viii. To install ingress-controller the Kubernetes cluster and push the ingress-controller ports in haproxy-config, run the following command:
+```sh 
+  ansible-playbook -i hosts.ini playbooks/deploy_push_nginx_ingress_controller.yaml
+```
+ #####   ix. To install Rancher, run the following command:
 ```sh
   ansible-playbook -i hosts.ini playbooks/rancher_setup.yml 
 ```
 
 ### Contact
-#### If you have any questions, please contact me at https://www.linkedin.com/in/prabhat-neupane-426779170
+#### If you have any questions, please contact me at https://www.linkedin.com/in/yaman-singh-rana-57913254/
 ##### Thank you for using this playbook!

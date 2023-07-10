@@ -1,0 +1,48 @@
+- name: Extract ingress-nginx-controller ports
+  hosts: master
+  gather_facts: false
+  tasks:
+    - name: Deploy Ingress Nginx controller
+      ansible.builtin.command: "kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.0/deploy/static/provider/baremetal/deploy.yaml"
+      register: ingress_controller_result
+      changed_when: ingress_controller_result.stdout != ""
+      when: inventory_hostname == groups['master'][0]
+
+    - name: Extract ingress-nginx-controller ports
+      ansible.builtin.command: kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.spec.ports[?(@.name=="http")].nodePort},{.spec.ports[?(@.name=="https")].nodePort}'
+      register: ingress_nginx_controller_ports
+      changed_when: false
+      when: inventory_hostname == groups['master'][0]
+
+    - name: Split ingress-nginx-controller ports
+      ansible.builtin.set_fact:
+        ingress_nginx_controller_port_80: "{{ hostvars[groups['master'][0]]['ingress_nginx_controller_ports']['stdout'].split(',')[0] }}"
+        ingress_nginx_controller_port_443: "{{ hostvars[groups['master'][0]]['ingress_nginx_controller_ports']['stdout'].split(',')[1] }}"
+
+    - name: Save facts to another host
+      ansible.builtin.add_host:
+        name: loadbalancer
+        ansible_user: "{{ hostvars[(groups['loadbalancer'][0])]['ansible_user'] }}"
+        ansible_host: "{{ hostvars[(groups['loadbalancer'][0])]['ansible_host'] }}"
+        ingress_nginx_controller_port_80: "{{ hostvars[groups['master'][0]]['ingress_nginx_controller_port_80'] }}"
+        ingress_nginx_controller_port_443: "{{ hostvars[groups['master'][0]]['ingress_nginx_controller_port_443'] }}"
+      delegate_to: localhost
+
+- name: Generate HAProxy configuration
+  hosts: loadbalancer
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Render HAProxy configuration template
+      ansible.builtin.template:
+        src: "templates/haproxy.cfg.j2"
+        dest: "/etc/haproxy/haproxy.cfg"
+        owner: "root"
+        group: "root"
+        mode: "0644"
+      notify: Restart haproxy
+  handlers:
+    - name: Restart haproxy
+      ansible.builtin.systemd:
+        name: haproxy
+        state: restarted

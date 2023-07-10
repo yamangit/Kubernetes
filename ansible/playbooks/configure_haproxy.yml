@@ -3,7 +3,7 @@
   become: true
   tasks:
     - name: Create HAProxy configuration file
-      blockinfile:
+      ansible.builtin.blockinfile:
         path: /etc/haproxy/haproxy.cfg
         block: |
           global
@@ -60,15 +60,15 @@
       notify: restart haproxy
 
     - name: Unmask HAProxy service
-      command: sudo systemctl unmask haproxy.service
+      ansible.builtin.command: sudo systemctl unmask haproxy.service
       ignore_errors: true
 
     - name: Enable HAProxy service
-      command: sudo systemctl enable haproxy
+      ansible.builtin.command: sudo systemctl enable haproxy
       notify: restart haproxy
 
   handlers:
     - name: restart haproxy
-      service:
+      ansible.builtin.service:
         name: haproxy
         state: restarted
