@@ -1,7 +1,7 @@
 - name: Install Kubernetes
   hosts: master:worker
   become: true
-  
+
   tasks:
     - name: Disable swap
       command: swapoff -a
@@ -10,7 +10,7 @@
       lineinfile:
         path: /etc/fstab
         state: absent
-        regexp: '^/swap.*'
+        regexp: "^/swap.*"
 
     - name: Disable Firewall
       service:
@@ -56,11 +56,11 @@
           - apt-transport-https
           - ca-certificates
 
-    - name: Execute command to import Docker GPG key  
-      ansible.builtin.apt_key:  
-          keyring: /etc/apt/trusted.gpg.d/docker.gpg
-          state: present 
-          url: https://download.docker.com/linux/ubuntu/gpg
+    - name: Execute command to import Docker GPG key
+      ansible.builtin.apt_key:
+        keyring: /etc/apt/trusted.gpg.d/docker.gpg
+        state: present
+        url: https://download.docker.com/linux/ubuntu/gpg
 
     - name: Add Docker repository
       apt_repository:
@@ -82,7 +82,7 @@
         regexp: "^SystemdCgroup\\s*=\\s*false"
         line: "SystemdCgroup = true"
 
-    - name: Restart containerd 
+    - name: Restart containerd
       command: sudo systemctl restart containerd
     - name: Enable containerd
       service:
@@ -93,34 +93,42 @@
       lineinfile:
         path: /etc/default/grub
         state: present
-        regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
+        regexp: "^GRUB_CMDLINE_LINUX_DEFAULT="
         line: 'GRUB_CMDLINE_LINUX_DEFAULT="cgroup_no_v1=net_prio,net_cls cgroup_enable=0"'
       notify: Update GRUB
-  
+
     - name: Add Kubernetes GPG key
       ansible.builtin.apt_key:
-        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg  
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
         state: present
 
     - name: Add Kubernetes apt repository
-      ansible.builtin.apt_repository: 
-        repo: deb http://apt.kubernetes.io/ kubernetes-xenial main 
+      ansible.builtin.apt_repository:
+        repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
         state: present
 
     - name: Disable cgroup
       command: sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="\(.*\)"/GRUB_CMDLINE_LINUX_DEFAULT="\1 systemd.unified_cgroup_hierarchy=0"/' /etc/default/grub
 
     - name: Install Kubernetes packages
-      apt:
-        name: "{{ item }}"
+      ansible.builtin.apt:
+        name:
+          - kubelet=1.25.0-00
+          - kubeadm=1.25.0-00
+          - kubectl=1.25.0-00
         state: present
-      with_items:
-        - kubelet
-        - kubeadm
-        - kubectl
+        update_cache: true
+        allow_downgrades: true
+      become: true
 
     - name: Hold Kubernetes packages
-      command: apt-mark hold kubelet kubeadm kubectl
+      ansible.builtin.dpkg_selections:
+        name: "{{ item }}"
+        selection: hold
+      with_items:
+        - kubeadm
+        - kubectl
+        - kubelet
 
     - name: Install SELinux utils
       apt:

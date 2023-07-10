@@ -15,7 +15,6 @@
 - name: Execute Worker Join Command on Workernodes
   hosts: worker
   become: true
-  become_user: root
   tasks:
     - name: Join Worker Node to Cluster
       command: "{{ hostvars[groups['master'][0]]['worker_join_command'] }}"

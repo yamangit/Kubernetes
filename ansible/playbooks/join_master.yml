@@ -16,7 +16,6 @@
 - name: Execute Master Join Command on Masternodes
   hosts: master[1:]
   become: true
-  become_user: root
   tasks:
     - name: Join Master Node to Cluster
       command: "{{ hostvars[groups['master'][0]]['master_join_command'] }}"
