@@ -3,7 +3,7 @@
 ## Requirements
 1. Ubuntu 22.04
 2. Ansible 2.9+
-3. The Ansible control node (where you'll run the Ansible commands) must be able to SSH to all the nodes without a password. This can be done by generating SSH keys and copying the public key to all the nodes.
+3. The ansible control node (where you'll run the Ansible commands) must be able to SSH to all the nodes without a password. This can be done by generating SSH keys and copying the public key to all the nodes.
 
 ## Usage
 To use this playbook, you will need to create a hosts.ini file that lists the hosts that you want to install Kubernetes, HAproxy and Rancher on. The hosts file should be in the same directory as the mainplaybook.yml.
