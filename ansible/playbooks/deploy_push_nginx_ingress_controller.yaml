@@ -2,10 +2,27 @@
   hosts: master
   gather_facts: false
   tasks:
+    # - name: Deploy Ingress Nginx controller
+    #   ansible.builtin.command: "kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.0/deploy/static/provider/baremetal/deploy.yaml"
+    #   register: ingress_controller_result
+    #   changed_when: ingress_controller_result.stdout != ""
+    #   when: inventory_hostname == groups['master'][0]
+    - name: Add Helm repository
+      ansible.builtin.command: helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+      changed_when: false
+
+    - name: Update Helm repositories
+      ansible.builtin.command: helm repo update
+      changed_when: false
+
     - name: Deploy Ingress Nginx controller
-      ansible.builtin.command: "kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.0/deploy/static/provider/baremetal/deploy.yaml"
-      register: ingress_controller_result
-      changed_when: ingress_controller_result.stdout != ""
+      ansible.builtin.command: helm install ingress-nginx ingress-nginx/ingress-nginx
+      register: helm_result
+      changed_when: helm_result.stdout != ""
+
+    - name: Verify installation
+      ansible.builtin.command: kubectl get pods -n default
+      changed_when: false
       when: inventory_hostname == groups['master'][0]
 
     - name: Extract ingress-nginx-controller ports
